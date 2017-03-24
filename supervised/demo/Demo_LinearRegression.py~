@@ -1,0 +1,32 @@
+import pandas as pd
+from matplotlib import pyplot as plt
+import os
+import sys
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, dir_path)
+from LinearRegression import LinearRegression
+
+
+df = pd.read_csv('housing_data.csv', header=None)
+df = df.rename(columns={0:'Population in 10,000s',
+                        1: 'Profit in $10,000s'})
+x= df.as_matrix(['Population in 10,000s'])
+y= df.as_matrix(['Profit in $10,000s'])
+
+
+clf = LinearRegression()
+clf.fit(x,y,1)
+#clf.load_model()
+#clf.save_model()
+val = clf.predict(x)
+
+plt.figure(1)
+plt.scatter(x[:,-1],y)
+plt.plot(x[:,-1],val,'r')
+plt.xlabel('Population in 10,000s')
+plt.ylabel('Profit in $10,000s')
+plt.legend(['Training data','Prediction'],loc=2)
+plt.show()
+
+print(clf.accuracy(predicted=val,actual=y))
